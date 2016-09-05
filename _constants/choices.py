@@ -13,3 +13,10 @@ ORDER_SOURCE = (
     (1, 'web store'),
     (2, 'management'),
 )
+
+DECORATION_OPTIONS = (
+    (1, 'None'),
+    (2, 'Simple'),
+    (3, 'Complex'),
+    (4, 'Very complex'),
+)

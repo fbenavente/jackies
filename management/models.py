@@ -3,8 +3,9 @@ from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin, Permission
 from django.contrib import auth
 from django.conf import settings
+from jackies.settings import MEDIA_URL
 from django.utils import timezone
-from _constants.choices import PRODUCT_STATUS_CODES, ORDER_SOURCE, ORDER_STATUS_CODES
+from _constants.choices import PRODUCT_STATUS_CODES, ORDER_SOURCE, ORDER_STATUS_CODES, DECORATION_OPTIONS
 
 
 class Category(models.Model):
@@ -25,11 +26,19 @@ class Product(models.Model):
     size = models.CharField(max_length=150, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     price = models.IntegerField()
-    image = models.ImageField(upload_to="uploads/products/", blank=True, null=True, default="default-avatar-product.png")
+    image = models.ImageField(upload_to="uploads/products/", blank=True, null=True)
     created_date = models.DateField(null=True, blank=True, default=timezone.now)
     status = models.IntegerField(null=True, blank=True, choices=PRODUCT_STATUS_CODES, default=1)
     discount = models.IntegerField(default=0)
 
+    def __str__(self):
+        return str(self.category) + " " + str(self.flavor) + " " + str(self.size)
+
+    def get_image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        else:
+            return MEDIA_URL + 'uploads/products/default-avatar-product.png'
 
     class Meta:
         app_label = 'management'
@@ -68,7 +77,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255)
     first_name = models.CharField(max_length=30, null=True, blank=True)
     last_name = models.CharField(max_length=30, null=True, blank=True)
-    profile_image = models.ImageField(upload_to="uploads/users/", blank=True, null=True, default="default-avatar.png")
+    profile_image = models.ImageField(upload_to="uploads/users/", blank=True, null=True)
     birth_date = models.DateField(blank=True, null=True)
     phone_number = models.CharField(max_length=30, null=True, blank=True)
 
@@ -97,6 +106,12 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return self.email.split("@")[0]
 
+    def get_image_url(self):
+        if self.profile_image and hasattr(self.profile_image, 'url'):
+            return self.profile_image.url
+        else:
+            return MEDIA_URL + 'uploads/users/default-avatar-user.png'
+
     @property
     def is_staff(self):
         """Is the user a member of staff?"""
@@ -121,7 +136,10 @@ class Order(models.Model):
     order_source = models.IntegerField(null=True, blank=True, choices=ORDER_SOURCE, default=1)
     status = models.IntegerField(null=True, blank=True, choices=ORDER_STATUS_CODES, default=1)
     discount = models.IntegerField(default=0)
+    total = models.IntegerField(null=True, blank=True)
 
+    def __str__(self):
+        return str(self.id)
 
     class Meta:
         app_label = 'management'
@@ -131,8 +149,9 @@ class Order(models.Model):
 class ProductInOrder(models.Model):
     order = models.ForeignKey(Order)
     product = models.ForeignKey(Product)
-    quantity = models.DecimalField(max_digits=3, decimal_places=1)
+    quantity = models.DecimalField(max_digits=4, decimal_places=1)
     wedding = models.BooleanField(default=False)
+    decoration = models.IntegerField(null=True, blank=True, choices=DECORATION_OPTIONS, default=1)
     subtotal = models.IntegerField(null=True, blank=True)
     discount = models.IntegerField(default=0)
 
@@ -140,3 +159,12 @@ class ProductInOrder(models.Model):
         unique_together = (("order", "product","wedding"),)
         app_label = 'management'
         db_table = 'product_in_order'
+
+class GlobalValues(models.Model):
+    key = models.CharField(max_length=100, null=True, blank=True)
+    int_value = models.IntegerField(null=True, blank=True)
+    char_value = models.CharField(max_length=200, null=True, blank=True)
+
+    class Meta:
+        app_label = 'management'
+        db_table = 'global_values'
