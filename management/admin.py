@@ -19,7 +19,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'name', 'order_time','retire_time','order_source','status','total',)
     search_fields = ('id', 'name',)
     inlines = (ProductInOrderInline,)
-    list_filter = ('order_time', 'retire_time', 'order_source', 'status', 'total',)
+    list_filter = ('order_time', 'retire_time', 'order_source', 'status',)
 
 class CustomUserAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'email', 'phone_number', 'image_html',)
