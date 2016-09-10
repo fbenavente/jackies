@@ -30,6 +30,8 @@ class Product(models.Model):
     created_date = models.DateField(null=True, blank=True, default=timezone.now)
     status = models.IntegerField(null=True, blank=True, choices=PRODUCT_STATUS_CODES, default=1)
     discount = models.IntegerField(default=0)
+    sold_units = models.IntegerField(default=0)
+    new = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.category) + " " + str(self.flavor) + " " + str(self.size)
@@ -41,6 +43,7 @@ class Product(models.Model):
             return MEDIA_URL + 'uploads/products/default-avatar-product.png'
 
     class Meta:
+        unique_together = (("category", "flavor","size"),)
         app_label = 'management'
         db_table = 'product'
 
@@ -160,6 +163,7 @@ class ProductInOrder(models.Model):
         app_label = 'management'
         db_table = 'product_in_order'
 
+
 class GlobalValues(models.Model):
     key = models.CharField(max_length=100, null=True, blank=True)
     int_value = models.IntegerField(null=True, blank=True)
@@ -168,3 +172,15 @@ class GlobalValues(models.Model):
     class Meta:
         app_label = 'management'
         db_table = 'global_values'
+
+
+class Campaign(models.Model):
+    title = models.CharField(max_length=250, null=True, blank=True)
+    products = models.ManyToManyField(Product)
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=False)
+
+    class Meta:
+        app_label = 'management'
+        db_table = 'campaign'
