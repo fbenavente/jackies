@@ -1,6 +1,14 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from management import views
+from rest_framework import routers
+from management.views import CustomUserViewSet
+from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
+from management.views import LoginView, LogoutView
 
+
+router = routers.SimpleRouter()
+router.register(r'customuser', CustomUserViewSet)
 
 urlpatterns = [
                 url(r'^manage_categories/$',
@@ -21,12 +29,10 @@ urlpatterns = [
                 url(r'^manage_products/(?P<pk>[\d]+)$',
                    views.ProductDetail.as_view(),
                    name='admin_products_with_pk'),
-                url(r'^manage_users/$',
-                   views.UserList.as_view(),
-                   name='admin_users'),
-                url(r'^manage_users/(?P<pk>[\d]+)$',
-                   views.UserDetail.as_view(),
-                   name='admin_users_with_pk'),
+                url(r'^manage_users/',include(router.urls)),
+                url(r'^register/$', login_required(TemplateView.as_view(template_name="management/register.html"), login_url='/register'),),
+                url(r'^auth/login/$', LoginView.as_view(), name='login'),
+                url(r'^auth/logout/$', LogoutView.as_view(), name='logout'),
                 url(r'^testing/$',
                    views.testing),
                 ]
