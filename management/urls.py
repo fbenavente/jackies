@@ -30,7 +30,7 @@ urlpatterns = [
                    views.ProductDetail.as_view(),
                    name='admin_products_with_pk'),
                 url(r'^manage_users/',include(router.urls)),
-                url(r'^register/$', login_required(TemplateView.as_view(template_name="management/register.html"), login_url='/register'),),
+                url(r'^register/$', TemplateView.as_view(template_name="management/register.html"), name='user_register'),
                 url(r'^auth/login/$', LoginView.as_view(), name='login'),
                 url(r'^auth/logout/$', LogoutView.as_view(), name='logout'),
                 url(r'^testing/$',
