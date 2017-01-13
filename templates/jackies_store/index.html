@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block style_imports %}
+
+    {% include 'jackies_store/stylesheets.html' %}
+
+{%  endblock %}
+
+{% block body %}
+    {% include 'navbar.html' %}
+
+  <div class="container-fluid" ng-controller="MainCtrl as main">
+    <div class="row">
+      <div class="col-xs-12 ng-view"></div>
+    </div>
+  </div>
+{%  endblock %}
+
+{% block body_scripts %}
+
+  {% include 'jackies_store/javascripts.html' %}
+
+{%  endblock %}

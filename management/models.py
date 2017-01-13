@@ -48,7 +48,7 @@ class Product(models.Model):
         db_table = 'product'
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None, last_name=None, first_name=None):
+    def create_user(self, email, password=None, confirm_password=None, last_name=None, first_name=None):
         """
         Creates and saves a User with the given email, and password.
         """
@@ -60,7 +60,6 @@ class CustomUserManager(BaseUserManager):
                           first_name=first_name)
 
         user.set_password(password)
-        user.is_admin = True
         user.save(using=self._db)
         return user
 
