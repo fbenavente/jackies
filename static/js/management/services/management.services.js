@@ -42,7 +42,7 @@
         function register(email, password, confirm_password) {
           return $http.post('/management/manage_users/customuser/', {
             password: password,
-              confirm_password: confirm_password,
+            confirm_password: confirm_password,
             email: email
           }).then(registerSuccessFn, registerErrorFn);
 
