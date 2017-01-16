@@ -39,6 +39,7 @@
     */
     function register() {
       Authentication.register(vm.email, vm.password, vm.confirm_password);
+        $scope.closeThisDialog();
     }
   }
 })();

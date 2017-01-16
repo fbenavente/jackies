@@ -9,11 +9,12 @@
 {% block body %}
     {% include 'navbar.html' %}
 
-  <div class="container-fluid" ng-controller="MainCtrl as main">
+  <div class="container-fluid">
     <div class="row">
       <div class="col-xs-12 ng-view"></div>
     </div>
   </div>
+
 {%  endblock %}
 
 {% block body_scripts %}
