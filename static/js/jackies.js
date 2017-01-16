@@ -20,6 +20,9 @@
   .module('jackies.interpolate', []);
 
     angular
+    .module('jackies.management', ['ngDialog']);
+
+    angular
   .module('jackies')
   .run(run);
 
@@ -34,11 +37,4 @@
       $http.defaults.xsrfCookieName = 'csrftoken';
     }
 
-    angular
-  .module('jackies').controller('MainCtrl', ['$route', '$routeParams', '$location',
-  function MainCtrl($route, $routeParams, $location) {
-    this.$route = $route;
-    this.$location = $location;
-    this.$routeParams = $routeParams;
-}]);
 })();

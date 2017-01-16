@@ -7,5 +7,5 @@
     ]);
 
   angular
-    .module('jackies.layout.controllers', []);
+    .module('jackies.layout.controllers', ['ngDialog']);
 })();

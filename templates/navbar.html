@@ -19,6 +19,11 @@
         {% else %}
           <li><a href="/login">Login</a></li>
           <li><a href="/register">Register</a></li>
+            <li><a class="btn btn-primary btn-fab btn-raised mdi-content-add btn-add-new-post"
+              href="javascript:void(0)"
+              ng-dialog="/management/register/"
+              ng-dialog-controller="RegisterController as vm"
+              ng-dialog-class="ngdialog-theme-default custom-width"></a></li>
         {% endif %}
       </ul>
     </div> <!-- /.collapse.navbar-collapse -->
