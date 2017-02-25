@@ -3,27 +3,28 @@
     <div class="navbar-header">
       <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#not-google-plus-nav">
         <span class="sr-only">Toggle Navigation</span>
+        <i class="fa fa-user"></i>
+        <!--<span class="icon-bar"></span>
         <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>-->
       </button>
-      <a class="navbar-brand" href="/">Not Google Plus</a>
+      <a class="navbar-brand" href="/">Jackies</a>
     </div> <!-- ./navbar-header -->
 
     <div class="collapse navbar-collapse" id="not-google-plus-nav">
       <ul class="nav navbar-nav pull-right">
         {% if user.is_authenticated %}
-          <li><a href="/+{{ user.username }}">+{{ user.username }}</a></li>
-          <li><a href="/+{{ user.username }}/settings">Settings</a></li>
-          <li><a href="javascript:void(0)" ng-click="vm.logout()">Logout</a></li>
+          <li><a href="javascript:void(0)"><i class="fa fa-user"></i>{{ user }}</a></li>
+          <li><a href="javascript:void(0)" ng-click="vm.logout()"><i class="fa fa-sign-out"></i>Logout</a></li>
         {% else %}
-          <li><a href="/login">Login</a></li>
-          <li><a href="/register">Register</a></li>
-            <li><a class="btn btn-primary btn-fab btn-raised mdi-content-add btn-add-new-post"
-              href="javascript:void(0)"
+          <li><a href="javascript:void(0)"
+              ng-dialog="/management/auth/login/"
+              ng-dialog-controller="LoginController as vm"
+              ng-dialog-class="ngdialog-theme-default custom-width"><i class="fa fa-sign-in"></i>Login</a></li>
+          <li><a href="javascript:void(0)"
               ng-dialog="/management/register/"
               ng-dialog-controller="RegisterController as vm"
-              ng-dialog-class="ngdialog-theme-default custom-width"></a></li>
+              ng-dialog-class="ngdialog-theme-default custom-width"><i class="fa fa-user-plus"></i>Register</a></li>
         {% endif %}
       </ul>
     </div> <!-- /.collapse.navbar-collapse -->
