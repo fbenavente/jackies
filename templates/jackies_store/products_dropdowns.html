@@ -1,0 +1,113 @@
+<div class="row">
+    <!-- Dropdown Categories -->
+    <div id="dropdown-category" class="col-sm-8 col-sm-offset-2 vertical-center dropdown-container" style="text-align: center">
+        <div class="dropdown" style="display: inline-block; margin: auto;">
+          <button class="btn btn-secondary btn-lg dropdown-toggle btn-question btn-question-big" type="button" id="dropdown-category-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="fa-stack fa-lg question-number">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-inverse fa-stack-1x">1</i>
+            </span>
+              <div class="question-text">Que quiero?</div>
+            <i class="fa fa-caret-down" style="vertical-align: 3px;"></i>
+          </button>
+
+          <ul id="dropdown-category-menu" class="dropdown-menu dropdown-menu-big scrollable-menu" aria-labelledby="dropdown-category-btn">
+            <li><a href="#">Tortas de Panqueque</a></li>
+            <li><a href="#">Tortas</a></li>
+            <li><a href="#">Brownies</a></li>
+            <!--<li role="separator" class="divider"></li>-->
+            <li><a href="#" onclick="mover('category')">Galletas</a></li>
+              <li><a href="#">Kuchen</a></li>
+              <li><a href="#">Queque</a></li>
+              <li><a href="#">Garrapiñadas</a></li>
+          </ul>
+        </div>
+    </div>
+
+</div>
+<div class="row" id="row-flavor">
+    <!-- Dropdown flavors -->
+    <div id="dropdown-flavor" class="col-sm-8 col-sm-offset-2 vertical-center dropdown-container dropdown-hidden" style="text-align: center">
+        <div class="dropdown" style="display: inline-block; margin: auto;">
+          <button class="btn btn-secondary btn-lg dropdown-toggle btn-question btn-question-big" type="button" id="dropdown-flavor-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="fa-stack fa-lg question-number">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-inverse fa-stack-1x">2</i>
+            </span>
+              <div class="question-text">De que tipo?</div>
+            <i class="fa fa-caret-down" style="vertical-align: 3px;"></i>
+          </button>
+
+          <ul id="dropdown-flavor-menu" class="dropdown-menu dropdown-menu-big scrollable-menu" aria-labelledby="dropdown-flavor-btn">
+            <li><a href="#">Tortas de Panqueque</a></li>
+            <li><a href="#">Tortas</a></li>
+            <li><a href="#">Brownies</a></li>
+            <!--<li role="separator" class="divider"></li>-->
+            <li><a href="#" onclick="mover('flavor')">Galletas</a></li>
+              <li><a href="#">Kuchen</a></li>
+              <li><a href="#">Queque</a></li>
+              <li><a href="#">Garrapiñadas</a></li>
+          </ul>
+        </div>
+    </div>
+</div>
+<div class="row" id="row-size">
+
+    <!-- Dropdown sizes -->
+    <div id="dropdown-size" class="col-sm-8 col-sm-offset-2 vertical-center dropdown-container dropdown-hidden" style="text-align: center">
+        <div class="dropdown" style="display: inline-block; margin: auto;">
+          <button class="btn btn-secondary btn-lg dropdown-toggle btn-question btn-question-big" type="button" id="dropdown-size-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            <span class="fa-stack fa-lg question-number">
+              <i class="fa fa-circle fa-stack-2x"></i>
+              <i class="fa fa-inverse fa-stack-1x">3</i>
+            </span>
+              <div class="question-text">Que tamaño?</div>
+            <i class="fa fa-caret-down" style="vertical-align: 3px;"></i>
+          </button>
+
+          <ul id="dropdown-size-menu" class="dropdown-menu dropdown-menu-big scrollable-menu" aria-labelledby="dropdown-size-btn">
+            <li><a href="#">Tortas de Panqueque</a></li>
+            <li><a href="#">Tortas</a></li>
+            <li><a href="#">Brownies</a></li>
+            <!--<li role="separator" class="divider"></li>-->
+            <li><a href="#" onclick="mover('size')">Galletas</a></li>
+              <li><a href="#">Kuchen</a></li>
+              <li><a href="#">Queque</a></li>
+              <li><a href="#">Garrapiñadas</a></li>
+          </ul>
+        </div>
+    </div>
+
+</div>
+
+
+<script>
+    function mover(btn_name) {
+        $( "#dropdown-"+btn_name ).removeClass( "col-sm-8 col-sm-offset-2 vertical-center" ).addClass( "col-xs-4" );
+        $( "#dropdown-"+btn_name+"-btn" ).removeClass( "btn-question-big" ).addClass( "btn-question-small" );
+        $( "#dropdown-"+btn_name+"-menu" ).removeClass( "dropdown-menu-big" ).addClass( "dropdown-menu-small" );
+        $( "#dropdown-"+btn_name+"-btn .question-text" ).addClass( "xs-hidden" );
+        if(btn_name == "category"){
+            $( "#row-flavor").show("fast", function() {
+                                        // Animation complete.
+                                        $("#dropdown-flavor").removeClass("dropdown-hidden");
+                                      });
+        }
+        else{
+            if(btn_name == "flavor") {
+                $( "#dropdown-"+btn_name).addClass( "col-xs-offset-4 margin-negative" );
+                $( "#row-size").show("fast", function() {
+                                        // Animation complete.
+                                        $("#dropdown-size").removeClass("dropdown-hidden");
+                                      });
+
+            }
+            else{
+                if(btn_name == "size") {
+                    $( "#dropdown-"+btn_name).addClass( "col-xs-offset-8 margin-negative" );
+                }
+            }
+        }
+
+    }
+</script>
