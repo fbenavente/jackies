@@ -7,14 +7,14 @@
 {%  endblock %}
 
 {% block body %}
-    {% include 'navbar.html' %}
+    <div id="wrapper">
+        {% include 'navbar.html' %}
 
-  <div class="container-fluid">
-    {% include 'jackies_store/products_dropdowns.html' %}
+        {% include 'jackies_store/products_dropdowns.html' %}
+    </div>
     <!--<div class="row">
       <div class="col-xs-12 ng-view"></div>
     </div>-->
-  </div>
 
 {%  endblock %}
 

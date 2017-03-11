@@ -9,8 +9,9 @@ import logging
 import json
 from django.contrib.auth import authenticate, login, logout
 from _constants.messages import *
-from _constants.choices import ORDER_STATUS_CODES, ORDER_SOURCE
+from _constants.choices import ORDER_STATUS_CODES, ORDER_SOURCE, PRODUCT_STATUS_CODES
 from datetime import datetime
+from collections import OrderedDict
 
 
 class CategoryList(generics.ListCreateAPIView):
@@ -87,6 +88,29 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
 class ProductList(generics.ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+    def get(self, request, *args, **kwargs):
+        # This method returns all the products in a dict sorted by category, flavor and size for the dropdowns
+        products_dict = OrderedDict()
+        #ToDo adding a top 10 filter (most sold)
+        products = Product.objects.filter(status=PRODUCT_STATUS_CODES[0][0]).order_by("category__order", "flavor__order", "size__order")
+
+        for product in products:
+            if not product.category.name in products_dict:
+                products_dict[product.category.name] = {"image": product.category.get_image_url(), "flavors":{}}
+
+            flavor, flavor_image = getFlavorName(product)
+            size, size_image = getSizeName(product)
+
+            if not flavor in products_dict[product.category.name]["flavors"]:
+                products_dict[product.category.name]["flavors"][flavor] = {"image": flavor_image, "sizes":{}}
+
+            if not size in products_dict[product.category.name]["flavors"][flavor]["sizes"]:
+                products_dict[product.category.name]["flavors"][flavor]["sizes"][size] = {"image": size_image, "data":{}}
+
+            products_dict[product.category.name]["flavors"][flavor]["sizes"][size]["data"] = ProductSerializer(product).data
+
+        return Response(products_dict, status=status.HTTP_200_OK)
 
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -166,4 +190,18 @@ class LogoutView(APIView):
 def testing(request):
     return render(request, 'management/testing.html')
 
+
+# Both functions below were made to return the name of the flavor or size including the empty string
+def getFlavorName(product):
+    if product.flavor:
+        return product.flavor.name, product.flavor.get_image_url()
+    else:
+        return "", ""
+
+
+def getSizeName(product):
+    if product.size:
+        return product.size.name, product.size.get_image_url()
+    else:
+        return "", ""
 
