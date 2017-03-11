@@ -1,5 +1,15 @@
+html{
+    height: 100%;
+}
+
 body{
     font-size: 16px;
+    background: url("../images/Almonds.jpg") no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size:cover;
+    height: 100%;
 }
 /*
 html{
@@ -16,17 +26,41 @@ html{
     padding-left: 5px;
 }
 
+#wrapper{
+    background: rgba(0,0,0,0);
+    width:100%;
+    height:100%;
+    -webkit-transition: background 0.8s ease-out;
+    -moz-transition: background 0.8s ease-out;
+    -o-transition: background 0.8s ease-out;
+    transition: background 0.8s ease-out;
+}
+
+.wrapper-back-modal{
+    background: rgba(0,0,0,0.6) !important;
+}
+
 .btn-question{
     color: #777;
-    background-color: #fff;
-    border: 0 none;
+    background: rgb(255, 255, 255); /* Fallback for older browsers without RGBA-support */
+    background: rgba(255, 255, 255, 0.9);
+   /* border: 0 none;*/
     font-weight: 100;
     padding-left: 0;
     line-height: 1.1;
 }
 
 .btn-question:focus, .btn-question:active:focus, .btn-question.active:focus {
-    outline: 0 none;
+    /*outline: 0 none;*/
+}
+
+.dropdown-menu{
+    background: rgb(255, 255, 255); /* Fallback for older browsers without RGBA-support */
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.dropdown-menu > li > a{
+    padding-left: 10px !important;
 }
 
 .btn-question-big{
@@ -34,7 +68,7 @@ html{
 }
 
 .dropdown-menu-big{
-    font-size: 150%;
+    font-size: 140%;
 }
 
 .btn-question-small{
@@ -42,25 +76,17 @@ html{
 }
 
 .dropdown-menu-small{
-    font-size: 80%;
+    font-size: 100%;
 }
 
 .dropdown-container, .dropdown-toggle {
-    -webkit-transition: all 1s ease-in-out;
-    -moz-transition: all 1s ease-in-out;
-    transition: all 1s ease-in-out;
-
+    -webkit-transition: all 1s ease-in-out, color 1ms;
+    -moz-transition: all 1s ease-in-out, color 1ms;
+    transition: all 1s ease-in-out, color 1ms;
 }
 
-.btn-question-big .question-number{
+.question-number{
     font-size: 45%;
-    margin-top: -19px;
-}
-
-.btn-question-small .question-number{
-    font-size: 45%;
-    margin-right: 5px;
-    margin-top: -11px;
 }
 
 .vertical-center {
@@ -79,7 +105,7 @@ html{
 .question-text{
     display: inline-block;
     overflow: hidden;
-    width: 73%;
+    width: 90%;
     -webkit-transition: width 1s ease-in-out;
     -moz-transition: width 1s ease-in-out;
     transition: width 1s ease-in-out;
@@ -88,41 +114,46 @@ html{
 /* custom css for XS devices */
 @media(max-width:767px){
     .vertical-center {
-    margin-top: 45%;
-    }
-
-    #dropdown-flavor.vertical-center, #dropdown-size.vertical-center{
     margin-top: 40%;
     }
 
-    .btn-question-big{
-        font-size: 220%;
+    #dropdown-flavor.vertical-center, #dropdown-size.vertical-center{
+    margin-top: 35%;
     }
 
-    .btn-question-small{
-        text-align: left;
+    .btn-question-big{
+        font-size: 173%;
+    }
+
+    .dropdown-menu-big{
+    font-size: 125%;
     }
 
     .xs-hidden{
-        width: 10%;
+        width: 38%;
         -webkit-transition: width 1s ease-in-out;
         -moz-transition: width 1s ease-in-out;
         transition: width 1s ease-in-out;
     }
 
     .dropdown-toggle{
-        /*width:100%;
-        If we want button borders with the right size then we have to enabled this property */
+        width:100%;
+        /*If we want button borders with the right size then we have to enabled this property */
     }
 
     .dropdown{
         width:100%;
     }
 
-    #dropdown-size-menu.dropdown-menu{
+    #dropdown-size-menu.dropdown-menu-small.dropdown-menu{
         /* This must be generic and not fixed for size-menu, because sometimes it would be the second one */
         left:auto;
         right:0;
+    }
+
+    #dropdown-flavor-menu.dropdown-menu-small.dropdown-menu{
+        /* This must be generic and not fixed for size-menu, because sometimes it would be the second one */
+        left:-50px;
     }
 }
 
@@ -137,9 +168,59 @@ html{
 }
 
 .margin-negative{
-    margin-top:-45px;
+    margin-top:-47px;
 }
 
 #row-flavor, #row-size{
     display: none;
+}
+
+.fa-caret-down{
+    vertical-align: 3px;
+}
+
+#logo_jackies{
+    height: 170%;
+    margin-top: -5px;
+}
+
+.image_thumbnail{
+    height: 27px;
+}
+
+/* Safari hacks */
+
+@media screen and (min-color-index:0)
+and(-webkit-min-device-pixel-ratio:0) { @media
+{
+    .fa-caret-down{
+        vertical-align: middle;
+    }
+
+    #logo_jackies{
+    height: 110%;
+}
+
+}}
+
+/* Safari hacks end */
+
+/* Angular use this to prevent uncompiled elements from being displayed */
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+        display: none !important;
+    }
+
+
+@keyframes blink {
+    from { color: #fc742a; }
+}
+
+.blink{
+    animation: blink 1s steps(2, start) infinite;
+}
+
+.product-preview-image{
+    -webkit-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.7);
+    -moz-box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.7);
+    box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.7);
 }

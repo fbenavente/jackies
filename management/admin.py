@@ -2,14 +2,14 @@ from django.contrib import admin
 from management.models import *
 
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('category', 'flavor', 'size', 'price','image_html',)
-    search_fields = ('category','flavor', 'size', 'description',)
-    list_filter = (('category',admin.RelatedOnlyFieldListFilter),'flavor','size',)
+    list_display = ('pk', 'category', 'flavor', 'size', 'price','thumbnail_html',)
+    search_fields = ('category__name', 'flavor__name', 'size__name', 'description',)
+    list_filter = (('category',admin.RelatedOnlyFieldListFilter),)
 
-    def image_html(self,obj):
-        return u'<img height="100" src="%s/" />' % (obj.get_image_url())
-    image_html.allow_tags = True
-    image_html.short_description = "Imagen"
+    def thumbnail_html(self,obj):
+        return u'<img height="100" src="%s/" />' % (obj.get_thumbnail_url())
+    thumbnail_html.allow_tags = True
+    thumbnail_html.short_description = "Imagen"
 
 class ProductInOrderInline(admin.TabularInline):
     model = ProductInOrder
@@ -34,8 +34,42 @@ class CustomUserAdmin(admin.ModelAdmin):
         return obj.get_full_name()
     full_name.short_description = "Full Name"
 
+
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name', 'order', 'image_html',)
+    search_fields = ('name','short_name',)
+
+    def image_html(self,obj):
+        return u'<img height="100" src="%s/" />' % (obj.get_image_url())
+    image_html.allow_tags = True
+    image_html.short_description = "Image"
+
+
+class FlavorAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'order', 'image_html',)
+    search_fields = ('name','short_name',)
+    list_filter = (('category',admin.RelatedOnlyFieldListFilter),)
+
+    def image_html(self,obj):
+        return u'<img height="100" src="%s/" />' % (obj.get_image_url())
+    image_html.allow_tags = True
+    image_html.short_description = "Image"
+
+
+class SizeAdmin(admin.ModelAdmin):
+    list_display = ('name', 'category', 'order', 'image_html',)
+    search_fields = ('name','short_name',)
+    list_filter = (('category',admin.RelatedOnlyFieldListFilter),)
+
+    def image_html(self,obj):
+        return u'<img height="100" src="%s/" />' % (obj.get_image_url())
+    image_html.allow_tags = True
+    image_html.short_description = "Image"
+
 admin.site.register(CustomUser, CustomUserAdmin)
-admin.site.register(Category)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Flavor, FlavorAdmin)
+admin.site.register(Size, SizeAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductInOrder)

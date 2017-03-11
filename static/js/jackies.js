@@ -28,6 +28,15 @@
 
     run.$inject = ['$http'];
 
+    angular
+  .module('jackies').filter('capitalizeWord', function() {
+    return function(input, scope) {
+        if (input!=null)
+        input = input.toLowerCase();
+        return input.substring(0,1).toUpperCase()+input.substring(1);
+      }
+    });
+
     /**
     * @name run
     * @desc Update xsrf $http headers to align with Django's defaults

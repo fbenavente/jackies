@@ -47,6 +47,12 @@ class ProductSerializer(serializers.ModelSerializer):
     """
     Serializer to parse Product's data
     """
+
+    image = serializers.SerializerMethodField('show_image_url')
+
+    def show_image_url(self, product):
+        return product.get_image_url()
+
     class Meta:
         model = Product
 

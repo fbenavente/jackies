@@ -11,22 +11,73 @@ from _constants.choices import PRODUCT_STATUS_CODES, ORDER_SOURCE, ORDER_STATUS_
 class Category(models.Model):
     name = models.CharField(max_length=200, blank=False, null=False, unique=True)
     short_name = models.CharField(max_length=30, blank=False, unique=True)
+    order = models.IntegerField(unique=True, blank=True, null=True)
+    image = models.ImageField(upload_to="uploads/categories/", blank=True, null=True)
 
     def __str__(self):
         return self.name
+
+    def get_image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        else:
+            return MEDIA_URL + 'uploads/categories/default-avatar-category.png'
 
     class Meta:
         app_label = 'management'
         db_table = 'category'
 
+class Flavor(models.Model):
+    category = models.ForeignKey(Category)
+    name = models.CharField(max_length=200, blank=False, null=False)
+    short_name = models.CharField(max_length=30, blank=True, null=True)
+    order = models.IntegerField(blank=True, null=True)
+    image = models.ImageField(upload_to="uploads/flavors/", blank=True, null=True)
+
+    def __str__(self):
+        return str(self.category) + " " + str(self.name)
+
+    def get_image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        else:
+            return MEDIA_URL + 'uploads/flavors/default-avatar-flavor.png'
+
+    class Meta:
+        unique_together = (("category", "name"),)
+        app_label = 'management'
+        db_table = 'flavor'
+
+class Size(models.Model):
+    category = models.ForeignKey(Category)
+    name = models.CharField(max_length=200, blank=False, null=False)
+    short_name = models.CharField(max_length=30, blank=True, null=True)
+    order = models.IntegerField(blank=True, null=True)
+    image = models.ImageField(upload_to="uploads/sizes/", blank=True, null=True)
+
+    def __str__(self):
+        return str(self.category) + " " + str(self.name)
+
+    def get_image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        else:
+            return MEDIA_URL + 'uploads/sizes/default-avatar-size.png'
+
+    class Meta:
+        unique_together = (("category", "name"),)
+        app_label = 'management'
+        db_table = 'size'
+
 class Product(models.Model):
 
     category = models.ForeignKey(Category)
-    flavor = models.CharField(max_length=150, null=True, blank=True)
-    size = models.CharField(max_length=150, null=True, blank=True)
+    flavor = models.ForeignKey(Flavor,null=True, blank=True)
+    size = models.ForeignKey(Size,null=True, blank=True)
     description = models.TextField(null=True, blank=True)
     price = models.IntegerField()
     image = models.ImageField(upload_to="uploads/products/", blank=True, null=True)
+    thumbnail = models.ImageField(upload_to="uploads/products/thumbnails/", blank=True, null=True)
     created_date = models.DateField(null=True, blank=True, default=timezone.now)
     status = models.IntegerField(null=True, blank=True, choices=PRODUCT_STATUS_CODES, default=1)
     discount = models.IntegerField(default=0)
@@ -41,6 +92,14 @@ class Product(models.Model):
             return self.image.url
         else:
             return MEDIA_URL + 'uploads/products/default-avatar-product.png'
+
+    def get_thumbnail_url(self):
+        if self.thumbnail and hasattr(self.thumbnail, 'url'):
+            return self.thumbnail.url
+        else:
+            return MEDIA_URL + 'uploads/products/default-avatar-product.png'
+
+    #ToDo dont allow to create product with empty flavor if its category already has flavor(s)
 
     class Meta:
         unique_together = (("category", "flavor","size"),)
