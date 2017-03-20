@@ -8,6 +8,11 @@ angular.module('jackies.management.services').factory('api', ['$http', function(
 				return result;
 			})
 		},
+        getBackgrounds: function() {
+			return $http.get('/management/manage_backgrounds/').then(function(result) {
+				return result;
+			})
+		},
 		saveCategory: function(category) {
 			return $http.post('/controller_admin/api/manage_categories/', category).then(function(result) {
 				return result;

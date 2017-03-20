@@ -242,3 +242,21 @@ class Campaign(models.Model):
     class Meta:
         app_label = 'management'
         db_table = 'campaign'
+
+class Background(models.Model):
+    name = models.CharField(max_length=150, null=True, blank=True)
+    image = models.ImageField(upload_to="uploads/backgrounds/", blank=True, null=True)
+    available = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+    def get_image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        else:
+            return MEDIA_URL + 'uploads/backgrounds/default-background.jpg'
+
+    class Meta:
+        app_label = 'management'
+        db_table = 'background'

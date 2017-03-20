@@ -1,9 +1,9 @@
 {% load staticfiles %}
 
-<div class="container-fluid" ng-controller="DropdownsController as vm">
-    <div class="row">
+<div id="container-fluid" class="container-fluid" ng-controller="DropdownsController as vm">
+    <div class="row" id="row-category">
         <!-- Dropdown Categories -->
-        <div id="dropdown-category" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 vertical-center dropdown-container dropdown-hidden" style="text-align: center">
+        <div id="dropdown-category" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 dropdown-container dropdown-hidden" style="text-align: center" ng-style="verticalCenter.category">
             <div class="dropdown" style="display: inline-block; margin: auto;">
               <button class="btn btn-secondary btn-lg dropdown-toggle btn-question btn-question-big" type="button" id="dropdown-category-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
 
@@ -27,7 +27,7 @@
     </div>
     <div class="row" id="row-flavor">
         <!-- Dropdown flavors -->
-        <div id="dropdown-flavor" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 vertical-center dropdown-container dropdown-hidden" style="text-align: center">
+        <div id="dropdown-flavor" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 dropdown-container dropdown-hidden" style="text-align: center" ng-style="verticalCenter.flavor">
             <div class="dropdown" style="display: inline-block; margin: auto;">
               <button class="btn btn-secondary btn-lg dropdown-toggle btn-question btn-question-big" ng-class="flavor_number_class" type="button" id="dropdown-flavor-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                   <div class="question-text">
@@ -41,7 +41,7 @@
               </button>
 
               <ul id="dropdown-flavor-menu" class="dropdown-menu dropdown-menu-big scrollable-menu" aria-labelledby="dropdown-flavor-btn">
-                <li ng-repeat="(flavor,dict) in productsDict[selectedDropdownItem.category]['flavors']"><a href="#" ng-click="selectDropdown('flavor', flavor)">[[flavor|capitalizeWord|limitTo:25]]</a></li>
+                <li ng-repeat="(flavor,dict) in productsDict[selectedDropdownItem.category]['flavors']"><a href="#" ng-click="selectDropdown('flavor', flavor)">[[flavor|capitalizeWord|limitTo:23]]</a></li>
               </ul>
             </div>
         </div>
@@ -49,7 +49,7 @@
     <div class="row" id="row-size">
 
         <!-- Dropdown sizes -->
-        <div id="dropdown-size" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 vertical-center dropdown-container dropdown-hidden" style="text-align: center">
+        <div id="dropdown-size" class="col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2 dropdown-container dropdown-hidden" style="text-align: center" ng-style="verticalCenter.size">
             <div class="dropdown" style="display: inline-block; margin: auto;">
               <button class="btn btn-secondary btn-lg dropdown-toggle btn-question btn-question-big" ng-class="size_number_class" type="button" id="dropdown-size-btn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                   <div class="question-text">

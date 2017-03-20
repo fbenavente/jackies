@@ -66,6 +66,17 @@ class SizeAdmin(admin.ModelAdmin):
     image_html.allow_tags = True
     image_html.short_description = "Image"
 
+
+class BackgroundAdmin(admin.ModelAdmin):
+    list_display = ('name', 'image_html', 'available',)
+    search_fields = ('name',)
+    list_filter = ('available',)
+
+    def image_html(self,obj):
+        return u'<img height="100" src="%s/" />' % (obj.get_image_url())
+    image_html.allow_tags = True
+    image_html.short_description = "Image"
+
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Flavor, FlavorAdmin)
@@ -74,3 +85,4 @@ admin.site.register(Order, OrderAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductInOrder)
 admin.site.register(GlobalValues)
+admin.site.register(Background, BackgroundAdmin)

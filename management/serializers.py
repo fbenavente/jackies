@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from management.models import CustomUser as User
-from management.models import Product, Order, ProductInOrder, Category
+from management.models import Product, Order, ProductInOrder, Category, Background
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
 
@@ -90,3 +90,16 @@ class OrderSerializer(serializers.ModelSerializer):
         exclusions = super(OrderSerializer, self).get_validation_exclusions()
 
         return exclusions + ['user']
+
+
+class BackgroundSerializer(serializers.ModelSerializer):
+
+    """ Model Serializer to parse Background's data """
+
+    image = serializers.SerializerMethodField('show_image_url')
+
+    def show_image_url(self, background):
+        return background.get_image_url()
+
+    class Meta:
+        model = Background

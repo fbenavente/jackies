@@ -11,6 +11,9 @@ router = routers.SimpleRouter()
 router.register(r'customuser', CustomUserViewSet)
 
 urlpatterns = [
+                url(r'^manage_backgrounds/$',
+                   views.BackgroundList.as_view(),
+                   name='admin_backgrounds'),
                 url(r'^manage_categories/$',
                    views.CategoryList.as_view(),
                    name='admin_categories'),
@@ -33,6 +36,4 @@ urlpatterns = [
                 url(r'^register/$', TemplateView.as_view(template_name="management/register.html"), name='user_register'),
                 url(r'^auth/login/$', LoginView.as_view(), name='login'),
                 url(r'^auth/logout/$', LogoutView.as_view(), name='logout'),
-                url(r'^testing/$',
-                   views.testing),
                 ]
