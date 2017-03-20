@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework import status, generics, permissions, viewsets
 from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
 from management.serializers import *
 from management.models import *
 from management.permissions import IsAccountOwner
@@ -13,6 +14,16 @@ from _constants.choices import ORDER_STATUS_CODES, ORDER_SOURCE, PRODUCT_STATUS_
 from datetime import datetime
 from collections import OrderedDict
 
+
+class LargeResultsSetPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+
+class BackgroundList(generics.ListCreateAPIView):
+    queryset = Background.objects.all().order_by('?')
+    serializer_class = BackgroundSerializer
+    pagination_class = LargeResultsSetPagination
 
 class CategoryList(generics.ListCreateAPIView):
     queryset = Category.objects.all()
@@ -185,10 +196,6 @@ class LogoutView(APIView):
         logout(request)
 
         return Response({}, status=status.HTTP_204_NO_CONTENT)
-
-
-def testing(request):
-    return render(request, 'management/testing.html')
 
 
 # Both functions below were made to return the name of the flavor or size including the empty string
