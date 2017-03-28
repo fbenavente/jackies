@@ -16,6 +16,9 @@
     */
     function DropdownsController($scope, api, generic_functions, $timeout, $interval) {
         var vm = this;
+        $scope.image_ratio = 1.5;
+        $scope.window_height = 0;
+        $scope.image_width = 0;
         $scope.productsDict = {};
         $scope.backgrounds = {};
         $scope.currentBackground = 1;
@@ -30,8 +33,9 @@
         $scope.flavor_number_class = "";
         $scope.size_number_class = "";
         $scope.selectedProduct = "";
-        var images = new Array();
+        $scope.images = [];
         var myInterval;
+        //$scope.pruebas = ["http://s1.1zoom.me/big3/477/356011-sepik.jpg","https://chancano.files.wordpress.com/2013/02/p1030184.jpg", "https://aliciaesclapez.com/wp-content/uploads/2014/01/Caos-C%C3%ADclico-92x73.jpg"];
 
         // Calculating margin-top for product image and dropdowns vertical center
 
@@ -43,11 +47,10 @@
         };
 
         $scope.setDropdownsCenters = function(){
-            var container_height = $(window).height();
             var navbar_height = $(".navbar").height();
             var navbar_margin = parseInt($(".navbar").css("margin-bottom"));
             var dropdown_category_height = $("#dropdown-category").height();
-            var margin_top_category = (container_height/2) - (dropdown_category_height/2) - navbar_height - navbar_margin;
+            var margin_top_category = ($(window).height()/2) - (dropdown_category_height/2) - navbar_height - navbar_margin;
             var margin_top_dropdowns = margin_top_category - (dropdown_category_height/2);
             $scope.verticalCenter["category"] = {"margin-top": parseInt(margin_top_category) + "px"};
             $scope.verticalCenter["flavor"] = {"margin-top": parseInt(margin_top_dropdowns) + "px"};
@@ -55,11 +58,38 @@
         };
 
 
+        $scope.setImageMarginTop = function(first){
+            $scope.window_height = $(window).height();
+            $scope.image_width = $("#product-preview-subcontainer").width();
+            var image_container_height = $scope.image_width / $scope.image_ratio;
+            //$("#product-preview-subcontainer").height(image_container_height);
+            var container_height = $scope.window_height;
+            var navbar_margin = parseInt($(".navbar").css("margin-bottom"));
+            var navbar_height = $("#jackies_navbar").height();
+            var row_category_height = $("#dropdown-category").height();
+            if(first){
+                row_category_height = row_category_height / 2;
+            }
+            //var margin_top_temp = (container_height / 2) - (image_height / 2);
+            var margin_top = (container_height - navbar_height - navbar_margin - row_category_height - image_container_height)/2;
+            if (margin_top < 0) {
+                margin_top = 30;
+            }
+            // we update the margin-top of the product image ONLY if the difference with the previous margin is significant (+-10)
+            if((parseInt($scope.verticalCenter["image"]["margin-top"]) < margin_top -10) || (parseInt($scope.verticalCenter["image"]["margin-top"]) > margin_top +10)) {
+
+                // method apply allows to include angular bindings inside jquery functions
+                $timeout(function () {
+                    $scope.verticalCenter["image"] = {"margin-top": parseInt(margin_top) + "px"};
+                },10);
+            }
+
+        };
+
 
         //Function to select the category, flavor or size
         $scope.selectDropdown = function(btn_name, item_selected){
             $scope.selectedDropdownItem[btn_name] = item_selected;
-            $scope.selectedProduct = {"image":""};
 
             $("#dropdown-" + btn_name).removeClass("col-xs-10 col-xs-offset-1 col-sm-8 col-sm-offset-2").addClass("col-xs-4");
             $scope.verticalCenter[btn_name] = {};
@@ -129,27 +159,47 @@
             }
         };
 
-        // seteamos los margenes top de los dropdowns para que queden centrados
+        // seteamos los margenes top de los dropdowns e imagen producto para que queden centrados
         $scope.setDropdownsCenters();
+        $scope.setImageMarginTop(true);
 
         // Load backgrounds
         api.getBackgrounds().then(function(response) {
             $scope.backgrounds = response.data;
-            images.push($( '<img src="' + $scope.backgrounds.results[0].image + '">' ));
-            $( 'body' ).css( 'background-image', 'url(' + $scope.backgrounds.results[0].image + ')' );
-            myInterval = $interval(function(){
-                if(!images[$scope.currentBackground]) {
-                    images.push($('<img src="' + $scope.backgrounds.results[$scope.currentBackground].image + '">'));
-                    images[$scope.currentBackground].bind('load', function () {
-                        $('body').css('background-image', 'url(' + $scope.backgrounds.results[$scope.currentBackground].image + ')');
-                    });
-                    if (images[$scope.currentBackground][0].width) {
-                        images[$scope.currentBackground].trigger('load');
+            var img = new Image();
+            img.onload = function() {
+                $( 'body' ).css( 'background-image', 'url(' + $scope.backgrounds.results[0].image + ')' );
+                $scope.loadAllBackgrounds();
+            };
+            img.src = $scope.backgrounds.results[0].image;
+            $scope.images.push(img);
+        },
+        function(response) {
+            //generic_functions.show_message(generic_functions.get_error_message(response), false);
+        });
+
+        $scope.loadAllBackgrounds = function(){
+
+            angular.forEach($scope.backgrounds.results, function(background, index){
+                if(index != 0){
+                    var img = new Image();
+                    if(index == $scope.backgrounds.results.length - 1){
+                        img.onload = function() {
+                            $scope.backgroundTransitionsInit();
+                        };
                     }
+                    img.src = $scope.backgrounds.results[index].image;
+                    $scope.images.push(img);
                 }
-                else{
-                    $('body').css('background-image', 'url(' + $scope.backgrounds.results[$scope.currentBackground].image + ')');
-                }
+            });
+
+        };
+
+
+        $scope.backgroundTransitionsInit = function(){
+            myInterval = $interval(function(){
+
+                $('body').css('background-image', 'url(' + $scope.backgrounds.results[$scope.currentBackground].image + ')');
 
                 if($scope.currentBackground < $scope.backgrounds.count - 1){
                     $scope.currentBackground++;
@@ -158,10 +208,7 @@
                     $scope.currentBackground = 0;
                 }
             }, 10000);
-        },
-        function(response) {
-            //generic_functions.show_message(generic_functions.get_error_message(response), false);
-        });
+        };
 
         $scope.$on('$destroy', function() {
                 $interval.cancel( myInterval );
@@ -193,50 +240,60 @@
         };
 
         $scope.loadProduct = function(product){
-            $("#product-preview-image").hide();
-            $("#product-image-loading").show();
+            if($scope.window_height != $(window).height() && $scope.image_width != $("#product-preview-subcontainer").width()){
+                $scope.setImageMarginTop(false);
+            }
+
+            //$scope.setProductImage();
+            if($scope.selectedProduct.image != product["image"]) {
+                $("#loading").show();
+                //$("#product-preview-image").hide();
+            }
+            else{
+                $("#loading").hide();
+                $("#product-preview").removeClass("dropdown-hidden");
+            }
+
+            /*var img = new Image;
+            img.onload = function() {
+              // your calculations here
+                //$scope.setProductImage();
+            };
+            img.src = 'http://static.diario.latercera.com/201205/1528537.jpg';
+            $timeout(function () {
+                    $("#loading").show();
+                },1000);*/
+
             $scope.selectedProduct = product;
-            $("#product-preview").removeClass("dropdown-hidden");
-            if($("#product-preview-image")[0].complete){
+            /*if($("#product-preview-image")[0].complete){
                 $scope.setImageMarginTop();
             }
             else{
                 $("#product-preview-image").load(function(){
                     $scope.setImageMarginTop();
                 });
-            }
+            }*/
 
             $("#wrapper").addClass("wrapper-back-modal");
         };
 
         $scope.closeProduct = function(){
             $("#product-preview").addClass("dropdown-hidden");
-            $("#wrapper").removeClass("wrapper-back-modal")
+            $("#wrapper").removeClass("wrapper-back-modal");
         };
 
-        $scope.setImageMarginTop = function(){
-
-            var container_height = $(window).height();
-            var navbar_margin = parseInt($(".navbar").css("margin-bottom"));
-            var row_category_height = $("#dropdown-category").height();
-            var image_height = $(".product-preview-image").height();
-            var margin_top_temp = (container_height / 2) - (image_height / 2);
-            var margin_top = margin_top_temp - (navbar_margin + row_category_height);
-            if (margin_top < 0) {
-                margin_top = 30;
+        /*$scope.imgLoadedCallback = function(){
+            console.log($("#product-preview-image").height());
+            if($scope.selectedProduct != ""){
+                $scope.setImageMarginTop();
             }
 
-            // we update the margin-top of the product image ONLY if the difference with the previous margin is significant (+-10)
-            if((parseInt($scope.verticalCenter["image"]["margin-top"]) < margin_top -10) || (parseInt($scope.verticalCenter["image"]["margin-top"]) > margin_top +10)) {
+        };*/
 
-                // method apply allows to include angular bindings inside jquery functions
-                $timeout(function () {
-                    $scope.verticalCenter["image"] = {"margin-top": parseInt(margin_top) + "px"};
-                },10);
-            }
+        $scope.setProductImage = function(){
+            $scope.selectedProduct.image = "https://enriquealvarez61.files.wordpress.com/2015/06/dsc_0417.jpg";
 
-            $("#product-image-loading").hide();
-            $("#product-preview-image").show("fade",600);
+            //$("#product-preview-image").show("fade",600);
         };
     }
 })();

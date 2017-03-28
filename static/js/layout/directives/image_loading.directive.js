@@ -7,24 +7,20 @@
 
     var app = angular.module('jackies.layout.directives', []);
 
-    app.directive('imageonload', function() {
+    app.directive('imageOnload', function() {
         return {
             restrict: 'A',
 
-            link: function(scope, element) {
-              element[0].bind('load', function() {
-                // Set visibility: true + remove spinner overlay
-                  console.log($(".product-preview-image").height());
-                  /*element.removeClass('spinner-hide');
-                  element.addClass('spinner-show');
-                  element.parent().find('span').remove();*/
-              });
-              scope.$watch('ngSrc', function() {
-                // Set visibility: false + inject temporary spinner overlay
-                  console.log($(".product-preview-image").height());
-                  //element.addClass('spinner-hide');
-                  // element.parent().append('<span class="spinner"></span>');
-              });
+            link: function(scope, element, attrs) {
+
+                  element.on('load', function() {
+                // call the function that was passed
+                //scope.$apply(attrs.imageOnload);
+                      $("#loading").hide();
+                      $("#product-preview").removeClass("dropdown-hidden");
+
+                // usage: <img ng-src="src" image-onload="imgLoadedCallback()" />
+            });
             }
         };
     });
