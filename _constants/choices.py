@@ -1,6 +1,7 @@
 PRODUCT_STATUS_CODES = (
     (1, 'active'),
     (2, 'inactive'),
+    (3, 'internal'),
 )
 
 ORDER_STATUS_CODES = (
