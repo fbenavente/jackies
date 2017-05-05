@@ -85,7 +85,13 @@ class Product(models.Model):
     new = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.category) + " " + str(self.flavor) + " " + str(self.size)
+        return self.get_full_name() + " " + self.get_size_name()
+
+    def get_full_name(self):
+        if self.flavor:
+            return str(self.category) + " " + str(self.flavor.name)
+        else:
+            return str(self.category)
 
     def get_image_url(self):
         if self.image and hasattr(self.image, 'url'):
@@ -98,6 +104,12 @@ class Product(models.Model):
             return self.thumbnail.url
         else:
             return MEDIA_URL + 'uploads/products/default-avatar-product.png'
+
+    def get_size_name(self):
+        if self.size:
+            return self.size.name
+        else:
+            return False
 
     #ToDo dont allow to create product with empty flavor if its category already has flavor(s)
 
