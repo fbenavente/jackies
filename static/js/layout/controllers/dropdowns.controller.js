@@ -20,6 +20,9 @@
         $scope.window_height = 0;
         $scope.image_width = 0;
         $scope.productsDict = {};
+        $scope.flavors_per_category = {};
+        $scope.sizes_per_flavor_category = {};
+        $scope.categories = [];
         $scope.backgrounds = {};
         $scope.currentBackground = 1;
         $scope.categoryQuestionNumber = "1";
@@ -34,6 +37,7 @@
         $scope.size_number_class = "";
         $scope.selectedProduct = "";
         $scope.images = [];
+        $scope.product_detail_margin = $("#product-detail").css("margin-bottom");
         var myInterval;
         //$scope.pruebas = ["http://s1.1zoom.me/big3/477/356011-sepik.jpg","https://chancano.files.wordpress.com/2013/02/p1030184.jpg", "https://aliciaesclapez.com/wp-content/uploads/2014/01/Caos-C%C3%ADclico-92x73.jpg"];
 
@@ -97,15 +101,15 @@
             $("#dropdown-" + btn_name + "-menu").removeClass("dropdown-menu-big").addClass("dropdown-menu-small");
             $("#dropdown-" + btn_name + "-btn .question-text").addClass("xs-hidden");
             if (btn_name == "category") {
-                if ("" in $scope.productsDict[item_selected]["flavors"]) {
+                if ("" in $scope.productsDict[item_selected]) {
                     $scope.selectedDropdownItem["flavor"] = "";
                     $scope.hideRow("flavor");
                     $scope.flavor_number_class = "";
-                    if ("" in $scope.productsDict[item_selected]["flavors"][""]["sizes"]) {
+                    if ("" in $scope.productsDict[item_selected][""]) {
                         $scope.selectedDropdownItem["size"] = "";
                         $scope.hideRow("size");
                         $scope.size_number_class = "";
-                        $scope.loadProduct($scope.productsDict[item_selected]["flavors"][""]["sizes"][""]["data"]);
+                        $scope.loadProduct($scope.productsDict[item_selected][""][""]);
                     }
                     else{
                         $scope.closeProduct();
@@ -132,11 +136,11 @@
             else {
                 if (btn_name == "flavor") {
                     $("#dropdown-" + btn_name).addClass("col-xs-offset-4 margin-negative");
-                    if ("" in $scope.productsDict[$scope.selectedDropdownItem["category"]]["flavors"][item_selected]["sizes"]) {
+                    if ("" in $scope.productsDict[$scope.selectedDropdownItem["category"]][item_selected]) {
                         $scope.selectedDropdownItem["size"] = "";
                         $scope.hideRow("size");
                         $scope.flavor_number_class = "";
-                        $scope.loadProduct($scope.productsDict[$scope.selectedDropdownItem["category"]]["flavors"][item_selected]["sizes"][""]["data"]);
+                        $scope.loadProduct($scope.productsDict[$scope.selectedDropdownItem["category"]][item_selected][""]);
                     }
                     else{
                         $scope.closeProduct();
@@ -152,7 +156,7 @@
                 else {
                     if (btn_name == "size") {
                         $("#dropdown-" + btn_name).addClass("col-xs-offset-8 margin-negative");
-                        $scope.loadProduct($scope.productsDict[$scope.selectedDropdownItem["category"]]["flavors"][$scope.selectedDropdownItem["flavor"]]["sizes"][item_selected]["data"]);
+                        $scope.loadProduct($scope.productsDict[$scope.selectedDropdownItem["category"]][$scope.selectedDropdownItem["flavor"]][item_selected]);
                         $scope.size_number_class = "";
                     }
                 }
@@ -216,7 +220,10 @@
 
         // Load products dict
         api.getProducts().then(function(response) {
-            $scope.productsDict = response.data;
+            $scope.categories = response.data["categories"];
+            $scope.flavors_per_category = response.data["flavors"];
+            $scope.sizes_per_flavor_category = response.data["sizes"];
+            $scope.productsDict = response.data["products"];
             $("#dropdown-category").removeClass("dropdown-hidden");
         },
         function(response) {
@@ -290,10 +297,12 @@
 
         };*/
 
-        $scope.setProductImage = function(){
-            $scope.selectedProduct.image = "https://enriquealvarez61.files.wordpress.com/2015/06/dsc_0417.jpg";
+        $scope.showProductDetail = function(){
+            $("#product-detail").css("margin-bottom","0px");
+        };
 
-            //$("#product-preview-image").show("fade",600);
+        $scope.hideProductDetail = function(){
+            $("#product-detail").css("margin-bottom",$scope.product_detail_margin);
         };
     }
 })();

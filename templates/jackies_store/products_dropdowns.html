@@ -18,8 +18,8 @@
               </button>
 
               <ul id="dropdown-category-menu" class="dropdown-menu dropdown-menu-big scrollable-menu" aria-labelledby="dropdown-category-btn">
-                <li ng-repeat="(category,dict) in productsDict"><a href="#" ng-click="selectDropdown('category', category)">
-                    <!--<img class="image_thumbnail img-thumbnail" src="" />--> [[category|capitalizeWord]]</a></li>
+                <li ng-repeat="category in categories|orderBy: 'order'"><a href="#" ng-click="selectDropdown('category', category['name'])">
+                    <!--<img class="image_thumbnail img-thumbnail" src="" />--> [[category['name']|capitalizeWord]]</a></li>
               </ul>
             </div>
         </div>
@@ -41,7 +41,7 @@
               </button>
 
               <ul id="dropdown-flavor-menu" class="dropdown-menu dropdown-menu-big scrollable-menu" aria-labelledby="dropdown-flavor-btn">
-                <li ng-repeat="(flavor,dict) in productsDict[selectedDropdownItem.category]['flavors']"><a href="#" ng-click="selectDropdown('flavor', flavor)">[[flavor|capitalizeWord|limitTo:23]]</a></li>
+                <li ng-repeat="flavor in flavors_per_category[selectedDropdownItem.category]|orderBy:'order'"><a href="#" ng-click="selectDropdown('flavor', flavor['name'])">[[flavor['name']|capitalizeWord|limitTo:23]]</a></li>
               </ul>
             </div>
         </div>
@@ -63,7 +63,7 @@
               </button>
 
               <ul id="dropdown-size-menu" class="dropdown-menu dropdown-menu-big scrollable-menu" aria-labelledby="dropdown-size-btn">
-                <li ng-repeat="(size,dict) in productsDict[selectedDropdownItem.category]['flavors'][selectedDropdownItem.flavor]['sizes']"><a href="#" ng-click="selectDropdown('size', size)">[[size|capitalizeWord]]</a></li>
+                <li ng-repeat="size in sizes_per_flavor_category[selectedDropdownItem.category][selectedDropdownItem.flavor]|orderBy:'order'"><a href="#" ng-click="selectDropdown('size', size['name'])">[[size['name']|capitalizeWord]]</a></li>
               </ul>
             </div>
         </div>

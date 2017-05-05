@@ -101,27 +101,44 @@ class ProductList(generics.ListCreateAPIView):
     serializer_class = ProductSerializer
 
     def get(self, request, *args, **kwargs):
-        # This method returns all the products in a dict sorted by category, flavor and size for the dropdowns
+        # This method returns a dict with three arrays: category, flavor and size for the dropdowns
+        data_dict = {"categories": [], "flavors": {}, "sizes": {}, "products":{}}
+        flavors_per_category = {}
+        sizes_per_flavor_category = {}
         products_dict = OrderedDict()
         #ToDo adding a top 10 filter (most sold)
-        products = Product.objects.filter(status=PRODUCT_STATUS_CODES[0][0]).order_by("category__order", "flavor__order", "size__order")
+        products = Product.objects.filter(status=PRODUCT_STATUS_CODES[0][0]).order_by("category", "flavor", "size")
+        categories_ids = products.values_list("category", flat=True).distinct("category")
+        categories = Category.objects.filter(id__in=categories_ids)
 
+        data_dict["categories"] = CategorySerializer(categories, many=True).data
         for product in products:
             if not product.category.name in products_dict:
-                products_dict[product.category.name] = {"image": product.category.get_image_url(), "flavors":{}}
+                products_dict[product.category.name] = {}
+                flavors_per_category[product.category.name] = []
+                sizes_per_flavor_category[product.category.name] = {}
 
             flavor, flavor_image = getFlavorName(product)
             size, size_image = getSizeName(product)
 
-            if not flavor in products_dict[product.category.name]["flavors"]:
-                products_dict[product.category.name]["flavors"][flavor] = {"image": flavor_image, "sizes":{}}
+            if not flavor in products_dict[product.category.name]:
+                products_dict[product.category.name][flavor] = {}
+                if flavor != "":
+                    flavors_per_category[product.category.name].append(FlavorSerializer(product.flavor).data)
+                else:
+                    flavors_per_category[product.category.name].append("")
+                sizes_per_flavor_category[product.category.name][flavor] = []
 
-            if not size in products_dict[product.category.name]["flavors"][flavor]["sizes"]:
-                products_dict[product.category.name]["flavors"][flavor]["sizes"][size] = {"image": size_image, "data":{}}
+            if size != "":
+                sizes_per_flavor_category[product.category.name][flavor].append(SizeSerializer(product.size).data)
+            else:
+                sizes_per_flavor_category[product.category.name][flavor].append("")
 
-            products_dict[product.category.name]["flavors"][flavor]["sizes"][size]["data"] = ProductSerializer(product).data
-
-        return Response(products_dict, status=status.HTTP_200_OK)
+            products_dict[product.category.name][flavor][size] = ProductSerializer(product).data
+        data_dict["flavors"] = flavors_per_category
+        data_dict["sizes"] = sizes_per_flavor_category
+        data_dict["products"] = products_dict
+        return Response(data_dict, status=status.HTTP_200_OK)
 
 
 class ProductDetail(generics.RetrieveUpdateDestroyAPIView):

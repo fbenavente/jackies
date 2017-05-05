@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from management.models import CustomUser as User
-from management.models import Product, Order, ProductInOrder, Category, Background
+from management.models import Product, Order, ProductInOrder, Category, Flavor, Background, Size
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
 
@@ -49,20 +49,64 @@ class ProductSerializer(serializers.ModelSerializer):
     """
 
     image = serializers.SerializerMethodField('show_image_url')
+    thumbnail = serializers.SerializerMethodField('show_thumbnail_url')
+    name = serializers.SerializerMethodField('show_product_full_name')
+    size = serializers.SerializerMethodField('get_size_name')
 
     def show_image_url(self, product):
         return product.get_image_url()
 
+    def show_thumbnail_url(self, product):
+        return product.get_thumbnail_url()
+
+    def show_product_full_name(self, product):
+        return product.get_full_name()
+
+    def get_size_name(self, product):
+        return product.get_size_name()
+
     class Meta:
         model = Product
+        fields = ('id', 'category', 'flavor', 'size', 'description', 'price', 'image', 'thumbnail', 'created_date', 'status', 'discount', 'sold_units', 'new', 'name')
 
 
 class CategorySerializer(serializers.ModelSerializer):
 
     """ Model Serializer to parse Category's data """
 
+    image = serializers.SerializerMethodField('show_image_url')
+
+    def show_image_url(self, category):
+        return category.get_image_url()
+
     class Meta:
         model = Category
+
+
+class FlavorSerializer(serializers.ModelSerializer):
+
+    """ Model Serializer to parse Flavor's data """
+
+    image = serializers.SerializerMethodField('show_image_url')
+
+    def show_image_url(self, flavor):
+        return flavor.get_image_url()
+
+    class Meta:
+        model = Flavor
+
+
+class SizeSerializer(serializers.ModelSerializer):
+
+    """ Model Serializer to parse Size's data """
+
+    image = serializers.SerializerMethodField('show_image_url')
+
+    def show_image_url(self, size):
+        return size.get_image_url()
+
+    class Meta:
+        model = Size
 
 
 class ProductInOrderSerializer(serializers.ModelSerializer):
