@@ -25,5 +25,19 @@
         };
     });
 
+    app.directive('modalReposition', function() {
+        return {
+            restrict: 'A',
+
+            link: function(scope, element, attrs) {
+
+                  element.on('shown.bs.modal', function() {
+                        var dialog = $(element).find('.modal-dialog');
+                      $(element).css("margin-top", Math.max(0, ($(window).height() - dialog.height()) / 2));
+            });
+            }
+        };
+    });
+
 
     })();

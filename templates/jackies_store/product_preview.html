@@ -6,9 +6,14 @@
         <img id="product-preview-image" ng-src="[[selectedProduct.image]]" class="img-responsive product-preview-image" alt="" image-onload />
         <div id="product-detail">
             <div class="product-title">[[selectedProduct.name]]
-                <a class="btn btn-default add-cart-btn" href="#" aria-label="Añadir al carro">
-                  <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                </a>
+                <div class="add-cart-btn">
+                    <a class="btn btn-default" href="#" aria-label="Añadir al carro" ng-click="add_to_cart(false)">
+                      <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                    </a>
+                    <a ng-show="selectedProduct.wedding_surcharge" class="btn btn-default" href="#" aria-label="Añadir al carro" ng-click="add_to_cart(true)">
+                      <i class="fa icon-wedding" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
             <table class="icons-table">
                 <tr>
@@ -20,7 +25,7 @@
                         [[selectedProduct.size]]
                     </td>
 
-                    <td style="text-align: center" valign="bottom">
+                    <td style="text-align: center; padding-left: 10px" valign="bottom">
                         <i class="fa fa-money fa-md" aria-hidden="true"></i>
                     </td>
                     <td>
@@ -35,11 +40,12 @@
                         [[selectedProduct.description]]
                     </td>
 
-                    <td style="text-align: center">
-                        <i class="fa fa-venus-mars fa-md" aria-hidden="true"></i>
+                    <td ng-show="selectedProduct.wedding_surcharge" style="text-align: center; padding-left: 10px">
+                        <i class="fa icon-wedding fa-md" aria-hidden="true"></i>
                     </td>
-                    <td>
-                        recargo boda: $5.000
+                    <td ng-show="selectedProduct.wedding_surcharge">
+                        recargo boda <span style="font-style: italic; font-size: 12px; padding-right: 8px;"> [[selectedProduct.wedding_surcharge | currency : "$": 0]]</span>
+
                     </td>
                 </tr>
             </table>

@@ -8,6 +8,11 @@ angular.module('jackies.management.services').factory('api', ['$http', function(
 				return result;
 			})
 		},
+        getProduct: function(pk) {
+			return $http.get('/management/manage_products/'+pk).then(function(result) {
+				return result;
+			})
+		},
         getBackgrounds: function() {
 			return $http.get('/management/manage_backgrounds/').then(function(result) {
 				return result;
