@@ -5,6 +5,7 @@ from django.contrib import auth
 from django.conf import settings
 from jackies.settings import MEDIA_URL
 from django.utils import timezone
+from django.utils.encoding import smart_str
 from _constants.choices import PRODUCT_STATUS_CODES, ORDER_SOURCE, ORDER_STATUS_CODES, DECORATION_OPTIONS
 
 
@@ -15,7 +16,7 @@ class Category(models.Model):
     image = models.ImageField(upload_to="uploads/categories/", blank=True, null=True)
 
     def __str__(self):
-        return self.name
+        return smart_str(self.name)
 
     def get_image_url(self):
         if self.image and hasattr(self.image, 'url'):
@@ -35,7 +36,7 @@ class Flavor(models.Model):
     image = models.ImageField(upload_to="uploads/flavors/", blank=True, null=True)
 
     def __str__(self):
-        return str(self.category) + " " + str(self.name)
+        return smart_str(self.category) + " " + smart_str(self.name)
 
     def get_image_url(self):
         if self.image and hasattr(self.image, 'url'):
@@ -56,7 +57,7 @@ class Size(models.Model):
     image = models.ImageField(upload_to="uploads/sizes/", blank=True, null=True)
 
     def __str__(self):
-        return str(self.category) + " " + str(self.name)
+        return smart_str(self.category) + " " + smart_str(self.name)
 
     def get_image_url(self):
         if self.image and hasattr(self.image, 'url'):
@@ -89,9 +90,9 @@ class Product(models.Model):
 
     def get_full_name(self):
         if self.flavor:
-            return str(self.category) + " " + str(self.flavor.name)
+            return smart_str(self.category) + " " + smart_str(self.flavor.name)
         else:
-            return str(self.category)
+            return smart_str(self.category)
 
     def get_image_url(self):
         if self.image and hasattr(self.image, 'url'):
@@ -107,9 +108,9 @@ class Product(models.Model):
 
     def get_size_name(self):
         if self.size:
-            return self.size.name
+            return smart_str(self.size.name)
         else:
-            return False
+            return smart_str("único")
 
     #ToDo dont allow to create product with empty flavor if its category already has flavor(s)
 
@@ -165,14 +166,14 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     def get_full_name(self):
         if self.first_name:
             if self.last_name:
-                return self.first_name + " " + self.last_name
+                return smart_str(self.first_name + " " + self.last_name)
             else:
-                return self.first_name
+                return smart_str(self.first_name)
         return self.email.split("@")[0]
 
     def get_short_name(self):
         if self.first_name:
-            return self.first_name
+            return smart_str(self.first_name)
         return self.email.split("@")[0]
 
     # On Python 3: def __str__(self):
@@ -243,6 +244,9 @@ class GlobalValues(models.Model):
         app_label = 'management'
         db_table = 'global_values'
 
+    def __str__(self):
+        return smart_str(self.key)
+
 
 class Campaign(models.Model):
     title = models.CharField(max_length=250, null=True, blank=True)
@@ -261,7 +265,7 @@ class Background(models.Model):
     available = models.BooleanField(default=True)
 
     def __str__(self):
-        return self.name
+        return smart_str(self.name)
 
     def get_image_url(self):
         if self.image and hasattr(self.image, 'url'):

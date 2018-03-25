@@ -77,6 +77,11 @@ class BackgroundAdmin(admin.ModelAdmin):
     image_html.allow_tags = True
     image_html.short_description = "Image"
 
+
+class GlobalValuesAdmin(admin.ModelAdmin):
+    list_display = ('key', 'int_value', 'char_value',)
+    search_fields = ('key',)
+
 admin.site.register(CustomUser, CustomUserAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Flavor, FlavorAdmin)
@@ -84,5 +89,5 @@ admin.site.register(Size, SizeAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Product, ProductAdmin)
 admin.site.register(ProductInOrder)
-admin.site.register(GlobalValues)
+admin.site.register(GlobalValues, GlobalValuesAdmin)
 admin.site.register(Background, BackgroundAdmin)

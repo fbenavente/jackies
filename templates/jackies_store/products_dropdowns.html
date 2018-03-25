@@ -72,6 +72,21 @@
 
     {% include 'jackies_store/product_preview.html' %}
 
+    <div ng-controller="ShoppingCartController">
+        <!-- shopping cart button -->
+        <div id="shopping_cart_btn">
+            <a href="#" data-toggle="modal" data-target="#shopping_cart" ng-click="closeProduct()">
+                <span class="fa-stack fa-2x">
+                  <i style="color:#813911; text-shadow: 2px 2px 2px #2A120A;" class="fa fa-circle fa-stack-2x"></i>
+                  <i style="color:#F3E2A9" class="fa fa-shopping-basket fa-stack-1x"></i>
+                </span>
+                <span ng-show="cart_count" id="cart_count" ng-cloak>[[cart_count]]</span>
+            </a>
+        </div>
+
+        {% include 'jackies_store/shopping_cart_modal.html' %}
+    </div>
+
 </div>
 
 

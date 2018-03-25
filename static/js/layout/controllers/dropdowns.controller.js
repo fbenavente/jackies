@@ -37,7 +37,8 @@
         $scope.size_number_class = "";
         $scope.selectedProduct = "";
         $scope.images = [];
-        $scope.product_detail_margin = $("#product-detail").css("margin-bottom");
+        $scope.wedding_active = false;
+        $scope.product_detail_margin = "";
         var myInterval;
         //$scope.pruebas = ["http://s1.1zoom.me/big3/477/356011-sepik.jpg","https://chancano.files.wordpress.com/2013/02/p1030184.jpg", "https://aliciaesclapez.com/wp-content/uploads/2014/01/Caos-C%C3%ADclico-92x73.jpg"];
 
@@ -251,36 +252,15 @@
                 $scope.setImageMarginTop(false);
             }
 
-            //$scope.setProductImage();
             if($scope.selectedProduct.image != product["image"]) {
                 $("#loading").show();
-                //$("#product-preview-image").hide();
             }
             else{
                 $("#loading").hide();
                 $("#product-preview").removeClass("dropdown-hidden");
             }
 
-            /*var img = new Image;
-            img.onload = function() {
-              // your calculations here
-                //$scope.setProductImage();
-            };
-            img.src = 'http://static.diario.latercera.com/201205/1528537.jpg';
-            $timeout(function () {
-                    $("#loading").show();
-                },1000);*/
-
             $scope.selectedProduct = product;
-            /*if($("#product-preview-image")[0].complete){
-                $scope.setImageMarginTop();
-            }
-            else{
-                $("#product-preview-image").load(function(){
-                    $scope.setImageMarginTop();
-                });
-            }*/
-
             $("#wrapper").addClass("wrapper-back-modal");
         };
 
@@ -289,20 +269,22 @@
             $("#wrapper").removeClass("wrapper-back-modal");
         };
 
-        /*$scope.imgLoadedCallback = function(){
-            console.log($("#product-preview-image").height());
-            if($scope.selectedProduct != ""){
-                $scope.setImageMarginTop();
-            }
-
-        };*/
-
         $scope.showProductDetail = function(){
             $("#product-detail").css("margin-bottom","0px");
         };
 
         $scope.hideProductDetail = function(){
-            $("#product-detail").css("margin-bottom",$scope.product_detail_margin);
+            $("#product-detail").css("margin-bottom", $scope.product_detail_margin);
+        };
+
+        $scope.$watch('selectedProduct', function() {
+            $timeout(function () {
+                $scope.product_detail_margin = "-"+$("#product-detail").height()+"px";
+            },10);
+        });
+
+        $scope.add_to_cart = function(wedding){
+           $scope.$broadcast ('addToCart', $scope.selectedProduct, wedding);
         };
     }
 })();

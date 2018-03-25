@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from management.models import CustomUser as User
-from management.models import Product, Order, ProductInOrder, Category, Flavor, Background, Size
+from management.models import Product, Order, ProductInOrder, Category, Flavor, Background, Size, GlobalValues
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
+from _constants.constants import WEEDING_SURCHARGE
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -52,6 +53,7 @@ class ProductSerializer(serializers.ModelSerializer):
     thumbnail = serializers.SerializerMethodField('show_thumbnail_url')
     name = serializers.SerializerMethodField('show_product_full_name')
     size = serializers.SerializerMethodField('get_size_name')
+    wedding_surcharge = serializers.SerializerMethodField()
 
     def show_image_url(self, product):
         return product.get_image_url()
@@ -65,9 +67,15 @@ class ProductSerializer(serializers.ModelSerializer):
     def get_size_name(self, product):
         return product.get_size_name()
 
+    def get_wedding_surcharge(self, product):
+        if product.category.name == "Torta de Panqueque":
+            return WEEDING_SURCHARGE
+        else:
+            return False
+
     class Meta:
         model = Product
-        fields = ('id', 'category', 'flavor', 'size', 'description', 'price', 'image', 'thumbnail', 'created_date', 'status', 'discount', 'sold_units', 'new', 'name')
+        fields = ('id', 'category', 'flavor', 'size', 'description', 'price', 'image', 'thumbnail', 'created_date', 'status', 'discount', 'sold_units', 'new', 'name', 'wedding_surcharge')
 
 
 class CategorySerializer(serializers.ModelSerializer):

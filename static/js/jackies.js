@@ -7,7 +7,8 @@
           'jackies.management',
           'jackies.config',
           'jackies.interpolate',
-          'jackies.layout'
+          'jackies.layout',
+          'ngCookies'
     ]);
 
   angular
@@ -31,9 +32,14 @@
     angular
   .module('jackies').filter('capitalizeWord', function() {
     return function(input, scope) {
-        if (input!=null)
-        input = input.toLowerCase();
-        return input.substring(0,1).toUpperCase()+input.substring(1);
+        if (input != null && input != undefined)
+        {
+            input = input.toLowerCase();
+            return input.substring(0, 1).toUpperCase() + input.substring(1);
+        }
+        else{
+            return input
+        }
       }
     });
 
